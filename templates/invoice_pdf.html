@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      font-size: 14px;
+      margin: 40px;
+      color: #333;
+      background: #fff;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 3px solid #16213E;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .header img {
+      height: 70px;
+    }
+
+    .h-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #16213E;
+      margin-bottom: 10px;
+    }
+
+    .company-info {
+      margin-top: 10px;
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    .client-block, .meta {
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .meta strong {
+      display: inline-block;
+      min-width: 160px;
+    }
+
+    table.items {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    table.items th, table.items td {
+      border: 1px solid #16213E;
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    table.items th {
+      background: #16213E;
+      color: #fff;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    table.items tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    table.items td.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .total {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      border-top: 3px solid #16213E;
+      padding-top: 15px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .total .amount {
+      margin-left: 20px;
+      font-size: 20px;
+      color: #16213E;
+    }
+
+    .footer {
+      font-size: 12px;
+      color: #16213E;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40px;
+    }
+
+    .footer div {
+      line-height: 1.6;
+    }
+
+    .footer strong {
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <img src="/absolute/path/to/logo.png" alt="Logo">
+    </div>
+    <div style="text-align:right;">
+      <div class="h-title">RECHNUNG</div>
+      <div><strong>{{ invoice.company.name }}</strong></div>
+      <div class="company-info">{{ invoice.company.address | replace('\n', '<br>') | safe }}</div>
+      <div>UID: {{ invoice.company.uid }}</div>
+    </div>
+  </div>
+
+  <div class="client-block">
+    <div><strong>Kunden Firma:</strong> {{ invoice.client.company_name }}</div>
+    <div><strong>Adresse:</strong> {{ invoice.client.address }}</div>
+    <div><strong>UID-Nummer:</strong> {{ invoice.client.uid or '' }}</div>
+  </div>
+
+  <div class="meta">
+    <div><strong>Rechnungs-Nr.:</strong> {{ invoice.number }} &nbsp;&nbsp; {{ invoice.city or '' }}, {{ invoice.date.strftime('%d.%m.%Y') }}</div>
+    <div><strong>Dienstgebernummer:</strong> {{ invoice.company.employer_no or '' }}</div>
+    {% if invoice.reverse_charge and invoice.company.reverse_charge_note %}
+      <div><em>{{ invoice.company.reverse_charge_note }}</em></div>
+    {% endif %}
+    {% if invoice.service_period %}
+      <div><strong>Leistungszeitraum:</strong> {{ invoice.service_period }}</div>
+    {% endif %}
+    {% if invoice.objekt %}
+      <div><strong>Objekt:</strong> {{ invoice.objekt }}</div>
+    {% endif %}
+  </div>
+
+  <table class="items">
+    <thead>
+      <tr>
+        <th>TITEL</th>
+        <th>TERMIN</th>
+        <th>SCHLÜSSEL</th>
+        <th>E.PREIS</th>
+        <th>NETTO EURO</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for it in invoice.items %}
+      <tr>
+        <td>{{ it.title }}</td>
+        <td>{{ it.termin or '' }}</td>
+        <td class="num">{{ it.schluessel if it.schluessel is not none else '' }}</td>
+        <td class="num">{{ '%.2f'|format(it.unit_price or 0) }}</td>
+        <td class="num">{{ '%.2f'|format(it.net or 0) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="total">
+    <div>GESAMT NETTO</div>
+    <div class="amount">{{ '%.2f'|format(invoice.total_net or 0) }} €</div>
+  </div>
+
+  <div class="footer">
+    <div>
+      +43 (0) 6766300167 <br>
+      info@staffconnecting.at <br>
+      www.staffconnecting.at
+    </div>
+    <div style="text-align:right;">
+      <strong>IBAN:</strong> AT83 1200 0514 8816 2831 <br>
+      <strong>BIC:</strong> BKAUATWW
+    </div>
+  </div>
+</body>
+</html>
+

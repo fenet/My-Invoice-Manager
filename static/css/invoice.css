@@ -1,0 +1,10 @@
+@page { size: A4; margin: 18mm; }
+body { font-size: 12px; color: #111; }
+.h-title { font-size: 26px; margin-bottom: 4px; }
+.client-block, .meta { margin: 12px 0; }
+.items { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.items th, .items td { border: 1px solid #333; padding: 6px; }
+.items th { background: #f0f0f0; }
+.num { text-align: right; }
+.total { display: flex; justify-content: space-between; margin-top: 12px; font-size: 14px; }
+.footer { position: fixed; bottom: 0; left: 0; right:0; text-align: center; font-size: 11px; color: #555; }

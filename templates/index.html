@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Dashboard header with quick stats -->
+<div class="dashboard-header">
+  <div class="stat-card">
+    <h3>Total Invoices</h3>
+    <p>{{ invoices|length }}</p>
+  </div>
+  <div class="stat-card">
+    <h3>Total Clients</h3>
+    <p>{{ clients|length }}</p>
+  </div>
+  <div class="stat-card">
+    <h3>Total Revenue</h3>
+    <p>{{ '%.2f'|format(invoices|sum(attribute='total_net') or 0) }} €</p>
+  </div>
+</div>
+
+<!-- Invoices Section -->
+<div class="page-header">
+  <h1>📑 Invoices</h1>
+  <a class="btn btn-primary" href="/invoices/new">+ New Invoice</a>
+</div>
+
+<div class="table-container">
+  <table class="responsive-table modern-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Client</th>
+        <th>Total (Net)</th>
+        <th class="actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for inv in invoices %}
+      <tr>
+        <td class="mono">#{{ inv.number }}</td>
+        <td>{{ inv.date }}</td>
+        <td>{{ inv.client.company_name }}</td>
+        <td class="mono">{{ '%.2f'|format(inv.total_net or 0) }} €</td>
+        <td class="actions">
+          <a class="btn btn-small btn-view" href="/invoices/{{ inv.id }}">Open</a>
+          <a class="btn btn-small btn-edit" href="/invoices/{{ inv.id }}/edit">Edit</a>
+          <form action="/invoices/{{ inv.id }}/delete" method="post" style="display:inline"
+                onsubmit="return confirm('Delete this invoice?');">
+            <button class="btn btn-small btn-delete" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="muted">No invoices yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Clients Section -->
+<div class="page-header" style="margin-top:40px;">
+  <h1>👥 Clients</h1>
+  <a class="btn btn-primary" href="/clients/new">+ New Client</a>
+</div>
+
+<div class="table-container">
+  <table class="responsive-table modern-table">
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>UID</th>
+        <th>Address</th>
+        <th class="actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in clients %}
+      <tr>
+        <td>{{ c.company_name }}</td>
+        <td>{{ c.uid or '-' }}</td>
+        <td><pre class="address">{{ c.address }}</pre></td>
+        <td class="actions">
+          <a class="btn btn-small btn-edit" href="/clients/{{ c.id }}/edit">Edit</a>
+          <form action="/clients/{{ c.id }}/delete" method="post" style="display:inline"
+                onsubmit="return confirm('Delete this client?');">
+            <button class="btn btn-small btn-delete" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="muted">No clients yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<style>
+/* Dashboard stats */
+.dashboard-header {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+.stat-card {
+  flex: 1;
+  min-width: 180px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.stat-card h3 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 400;
+}
+.stat-card p {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+/* Modern tables */
+.modern-table th {
+  background: #f0f2f5;
+  color: #333;
+  font-size: 0.9rem;
+}
+.modern-table td {
+  font-size: 0.9rem;
+}
+.modern-table tr:hover {
+  background: #f9fbff;
+  transition: background 0.2s ease-in-out;
+}
+
+/* Mobile-friendly */
+@media (max-width: 700px) {
+  .modern-table th:nth-child(2),
+  .modern-table td:nth-child(2) {
+    display: none;
+  }
+}
+</style>
+
+{% endblock %}
+

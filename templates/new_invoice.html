@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="page-title">Neue Rechnung erstellen</h2>
+
+<form action="/invoices/create" method="post" class="invoice-form">
+  <div class="form-section">
+    <div class="form-row">
+      <label class="form-label">
+        <span>Client</span>
+        <select name="client_id" required>
+          <option value="" disabled selected>Select client</option>
+          {% for c in clients %}
+            <option value="{{ c.id }}">{{ c.company_name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label class="form-label">
+        <span>Date</span>
+        <input type="date" name="date_str" value="{{ today.isoformat() }}">
+      </label>
+      <label class="form-label">
+        <span>City</span>
+        <input type="text" name="city" value="{{ default_city or '' }}">
+      </label>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label full-width">
+        <span>Leistungszeitraum (Service period)</span>
+        <input type="text" name="service_period" placeholder="z. B. März">
+      </label>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label full-width">
+        <span>Objekt</span>
+        <input type="text" name="objekt" placeholder="e.g., Company / Address">
+      </label>
+    </div>
+
+    <div class="form-row checkbox-row">
+      <label>
+        <input type="checkbox" name="reverse_charge" value="true" checked>
+        Reverse charge note
+      </label>
+    </div>
+  </div>
+
+  <h3 class="section-title">Items</h3>
+  <div class="table-container">
+    <table id="items" class="responsive-table">
+      <thead>
+        <tr>
+          <th>Titel</th>
+          <th>Termin</th>
+          <th>Schlüssel</th>
+          <th>E.Preis</th>
+          <th>Netto</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <button type="button" class="btn btn-secondary" onclick="addItemRow()">+ Add item</button>
+
+  <div class="actions">
+    <button class="btn btn-primary" type="submit">Create Invoice</button>
+  </div>
+</form>
+
+<script>
+function addItemRow(data={}) {
+  const tbody = document.querySelector('#items tbody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" name="item_title" value="${data.title||''}" placeholder="Titel"></td>
+    <td><input type="text" name="item_termin" value="${data.termin||''}" placeholder="e.g., 06.03 und 13.03"></td>
+    <td><input type="number" step="any" name="item_schluessel" value="${data.schluessel||''}"></td>
+    <td><input type="number" step="0.01" name="item_unit_price" value="${data.unit_price||''}"></td>
+    <td><input type="number" step="0.01" name="item_net" value="${data.net||''}" placeholder="auto if empty"></td>
+    <td><button type="button" class="btn btn-delete btn-small" onclick="this.closest('tr').remove()">✖</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+// add two default rows
+addItemRow({title:"Monatspauschale"});
+addItemRow({title:"Unterhaltsreinigung"});
+</script>
+
+<style>
+.page-title {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.invoice-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.form-section {
+  margin-bottom: 24px;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+
+.form-label span {
+  margin-bottom: 4px;
+  font-weight: 500;
+  color: #333;
+}
+
+.full-width {
+  flex: 100%;
+}
+
+input, select {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.checkbox-row {
+  align-items: center;
+}
+
+.section-title {
+  margin: 16px 0 8px;
+  font-size: 1.2rem;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.responsive-table th, .responsive-table td {
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.responsive-table th {
+  background: #f7f7f7;
+}
+
+.actions {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: #fff;
+}
+</style>
+{% endblock %}
+

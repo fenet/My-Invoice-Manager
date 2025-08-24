@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or "My Invoice Manager" }}</title>
+  <link rel="stylesheet" href="/static/css/site.css">
+  <script src="/static/js/app.js" defer></script>
+
+  <!-- Fancy Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      background: #f5f6fa;
+      color: #333;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* --- HEADER --- */
+    header {
+      background: #fff;
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    header img {
+      height: 42px;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      margin: 0;
+      font-weight: 700;
+      color: #16213E;
+      letter-spacing: 0.5px;
+    }
+
+    /* --- NAV BUTTON LINKS --- */
+    nav {
+      display: flex;
+      gap: 12px;
+    }
+    nav a {
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 25px;
+      background: #16213E;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+    nav a:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+    }
+
+    /* --- MAIN CONTENT --- */
+    main {
+      padding: 20px;
+    }
+
+    h1, h2, h3 {
+      font-weight: 600;
+      margin-top: 1em;
+      margin-bottom: 0.5em;
+    }
+    h1 { font-size: 1.6rem; }
+    h2 { font-size: 1.3rem; }
+    h3 { font-size: 1.1rem; }
+
+    /* Keep your existing table & button styles intact */
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin: 16px 0; flex-wrap: wrap; gap: 8px; }
+    .table-container { overflow-x: auto; }
+    .responsive-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; background: white; border-radius: 6px; overflow: hidden; }
+    .responsive-table th, .responsive-table td { padding: 12px 16px; border-bottom: 1px solid #eee; text-align: left; font-size: 0.95rem; }
+    .responsive-table th { background: #f7f7f7; font-weight: 600; }
+    .responsive-table tr:hover { background: #f9fafc; }
+    .actions { white-space: nowrap; text-align: right; }
+
+    .btn { display: inline-block; padding: 6px 12px; border-radius: 4px; border: none; text-decoration: none; cursor: pointer; font-size: 0.9rem; margin: 2px; }
+    .btn-small { padding: 4px 8px; font-size: 0.8rem; }
+    .btn-primary { background: #16213E; color: white; }
+    .btn-view { background: #6c757d; color: white; }
+    .btn-edit { background: #ffc107; color: black; }
+    .btn-delete { background: #dc3545; color: white; }
+    .btn:hover { opacity: 0.9; }
+    .muted { color: #777; text-align: center; }
+    .address { margin: 0; white-space: pre-wrap; font-size: 0.9em; line-height: 1.3; }
+
+    /* --- MOBILE FRIENDLY --- */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      nav {
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .responsive-table th:nth-child(2),
+      .responsive-table td:nth-child(2),
+      .responsive-table th:nth-child(3),
+      .responsive-table td:nth-child(3) {
+        display: none;
+      }
+      .actions { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="/static/img/logo.png" alt="Logo">
+      <h1>My Invoice Manager</h1>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/clients/new">New Client</a>
+      <a href="/invoices/new">New Invoice</a>
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
+

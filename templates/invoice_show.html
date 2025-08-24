@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="page-title">Invoice <span class="mono">#{{ invoice.number }}</span></h2>
+
+<div class="invoice-details">
+  <div class="card">
+    <h3>Client</h3>
+    <p><strong>{{ invoice.client.company_name }}</strong></p>
+    <p class="address">{{ invoice.client.address }}</p>
+    <p><strong>UID:</strong> {{ invoice.client.uid or '-' }}</p>
+  </div>
+
+  <div class="card">
+    <h3>Invoice</h3>
+    <p><strong>Date:</strong> {{ invoice.city or '' }}, {{ invoice.date }}</p>
+    <p><strong>Service period:</strong> {{ invoice.service_period or '-' }}</p>
+    <p><strong>Object:</strong> {{ invoice.objekt or '-' }}</p>
+    <p><strong>Total (net):</strong> 
+      <span class="total-amount">{{ '%.2f'|format(invoice.total_net or 0) }} €</span>
+    </p>
+  </div>
+</div>
+
+<h3 class="section-title">Items</h3>
+<div class="table-container">
+  <table class="responsive-table">
+    <thead>
+      <tr>
+        <th>Titel</th>
+        <th>Termin</th>
+        <th>Schlüssel</th>
+        <th>E.Preis</th>
+        <th>Netto</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for it in invoice.items %}
+      <tr>
+        <td>{{ it.title }}</td>
+        <td>{{ it.termin or '' }}</td>
+        <td class="mono">{{ it.schluessel if it.schluessel is not none else '' }}</td>
+        <td class="mono">{{ '%.2f'|format(it.unit_price or 0) }}</td>
+        <td class="mono">{{ '%.2f'|format(it.net or 0) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="actions">
+  <a class="btn btn-primary" href="/invoices/{{ invoice.id }}/pdf">⬇ Download PDF</a>
+  <a class="btn btn-edit" href="/invoices/{{ invoice.id }}/edit">✏ Edit</a>
+  <form action="/invoices/{{ invoice.id }}/delete" method="post" style="display:inline"
+        onsubmit="return confirm('Delete this invoice?');">
+    <button class="btn btn-delete" type="submit">🗑 Delete</button>
+  </form>
+</div>
+
+<style>
+.page-title {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.invoice-details {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.card {
+  flex: 1;
+  min-width: 280px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.address {
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.total-amount {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #007bff;
+}
+
+.section-title {
+  margin: 20px 0 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.responsive-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.responsive-table th, .responsive-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.responsive-table th {
+  background: #f7f7f7;
+  font-weight: 600;
+}
+
+.responsive-table tr:hover {
+  background: #f9fafc;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Mobile-friendly: hide less-important columns */
+@media (max-width: 700px) {
+  .responsive-table th:nth-child(2),
+  .responsive-table td:nth-child(2),
+  .responsive-table th:nth-child(3),
+  .responsive-table td:nth-child(3) {
+    display: none;
+  }
+}
+</style>
+{% endblock %}
+

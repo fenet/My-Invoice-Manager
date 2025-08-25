@@ -121,18 +121,34 @@
       }
       .actions { text-align: left; }
     }
+    /* Vibrant Logout Button */
+.btn-logout {
+  background: linear-gradient(135deg, #ff4b2b, #ff416c);
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: 25px;
+  padding: 8px 18px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(255, 65, 108, 0.3);
+}
+
+.btn-logout:hover {
+  background: linear-gradient(135deg, #ff6a00, #ee0979);
+  transform: scale(1.05);
+}
+
   </style>
 </head>
 <body>
   <header>
     <div class="brand">
       <img src="/static/img/logo.png" alt="Logo">
-      <h1>My Invoice Manager</h1>
+      <h1>Mein Rechnungsmanager</h1>
     </div>
     <nav>
       <a href="/">Home</a>
       <a href="/clients/new">New Client</a>
-      <a href="/invoices/new">New Invoice</a>
+      <a href="/invoices/new">New Invoice</a><a href="/logout" class="btn-logout">Logout</a>
     </nav>
   </header>
   <main>

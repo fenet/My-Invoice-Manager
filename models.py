@@ -52,3 +52,10 @@ class InvoiceItem(Base):
     net: Mapped[Numeric] = mapped_column(Numeric(12,2), default=0)
 
     invoice = relationship("Invoice", back_populates="items")
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)   
